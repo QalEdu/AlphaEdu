@@ -6,67 +6,114 @@
   <title>AlphaEdu Quiz</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
       margin: 0;
       padding: 20px;
+      color: #333;
     }
     .container {
       max-width: 600px;
       margin: 0 auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      overflow: hidden;
+      position: relative;
     }
     h1 {
-      text-align: center;
-      color: #333;
+      font-size: 2.5rem;
+      color: #ff6f61;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     }
     .question {
+      font-size: 1.5rem;
       margin-bottom: 20px;
+      color: #555;
     }
     .options label {
       display: block;
       margin: 10px 0;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
+      padding: 15px;
+      background: #fff;
+      border: 2px solid #ff6f61;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: transform 0.3s, background 0.3s, border-color 0.3s;
+      font-size: 1.2rem;
     }
     .options label:hover {
-      background-color: #f0f0f0;
+      transform: scale(1.05);
+      background: #ff6f61;
+      color: #fff;
+      border-color: #ff6f61;
     }
     button {
       display: block;
       width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      background-color: #007bff;
+      padding: 15px;
+      margin-top: 15px;
+      background: #ff6f61;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 1.2rem;
+      transition: background 0.3s, transform 0.3s;
+    }
+    button:hover {
+      background: #ff4d4d;
+      transform: scale(1.05);
     }
     button:disabled {
-      background-color: #ccc;
+      background: #ccc;
+      cursor: not-allowed;
     }
     .result {
       margin-top: 20px;
-      text-align: center;
-      font-size: 18px;
+      font-size: 1.5rem;
       font-weight: bold;
+      color: #ff6f61;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     }
     .hidden {
       display: none;
+    }
+    .confetti {
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 120%;
+      height: 120%;
+      z-index: -1;
+      animation: confetti-fall 5s infinite;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        #ff6f61 10px,
+        #ff6f61 20px,
+        #ff9a9e 20px,
+        #ff9a9e 30px
+      );
+    }
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(-100%);
+      }
+      100% {
+        transform: translateY(100%);
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Simple Quiz App</h1>
+    <div class="confetti"></div>
+    <h1>AlphaEdu Quiz</h1>
     <div id="home" class="hidden">
       <button id="startQuiz">Start Quiz</button>
     </div>
@@ -190,7 +237,7 @@
       optionsElement.style.display = "none";
       submitButton.style.display = "none";
       backButton.classList.add("hidden");
-      resultElement.textContent = `You scored ${score} out of ${quizData.length}!`;
+      resultElement.textContent = `🎉 You scored ${score} out of ${quizData.length}! 🎉`;
       resultElement.classList.remove("hidden");
       returnHomeButton.classList.remove("hidden");
     }
