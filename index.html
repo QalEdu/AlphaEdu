@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Quiz App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .options label {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .options label:hover {
+      background-color: #f0f0f0;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:disabled {
+      background-color: #ccc;
+    }
+    .result {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Simple Quiz App</h1>
+    <div id="home" class="hidden">
+      <button id="startQuiz">Start Quiz</button>
+    </div>
+    <div id="quiz">
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+      <button id="backButton" class="hidden">Back</button>
+      <button id="submit">Submit</button>
+    </div>
+    <div class="result" id="result"></div>
+    <button id="returnHome" class="hidden">Return to Home</button>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "What is the capital of France?",
+        options: ["Berlin", "Madrid", "Paris", "Rome"],
+        answer: "Paris",
+      },
+      {
+        question: "Which language runs in a web browser?",
+        options: ["Java", "C", "Python", "JavaScript"],
+        answer: "JavaScript",
+      },
+      {
+        question: "What does CSS stand for?",
+        options: [
+          "Central Style Sheets",
+          "Cascading Style Sheets",
+          "Common Style Sheets",
+          "Colorful Style Sheets",
+        ],
+        answer: "Cascading Style Sheets",
+      },
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    const homeElement = document.getElementById("home");
+    const questionElement = document.getElementById("question");
+    const optionsElement = document.getElementById("options");
+    const backButton = document.getElementById("backButton");
+    const submitButton = document.getElementById("submit");
+    const resultElement = document.getElementById("result");
+    const returnHomeButton = document.getElementById("returnHome");
+    const startQuizButton = document.getElementById("startQuiz");
+
+    function showHome() {
+      homeElement.classList.remove("hidden");
+      document.getElementById("quiz").classList.add("hidden");
+      resultElement.classList.add("hidden");
+      returnHomeButton.classList.add("hidden");
+      backButton.classList.add("hidden");
+      currentQuestionIndex = 0;
+      score = 0;
+    }
+
+    function loadQuestion() {
+      const currentQuestion = quizData[currentQuestionIndex];
+      questionElement.textContent = currentQuestion.question;
+      optionsElement.innerHTML = "";
+      currentQuestion.options.forEach((option) => {
+        const label = document.createElement("label");
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "option";
+        radio.value = option;
+        label.appendChild(radio);
+        label.appendChild(document.createTextNode(option));
+        optionsElement.appendChild(label);
+      });
+      backButton.classList.toggle("hidden", currentQuestionIndex === 0);
+    }
+
+    function getSelectedOption() {
+      const selectedRadio = document.querySelector('input[name="option"]:checked');
+      return selectedRadio ? selectedRadio.value : null;
+    }
+
+    submitButton.addEventListener("click", () => {
+      const selectedOption = getSelectedOption();
+      if (!selectedOption) {
+        alert("Please select an option!");
+        return;
+      }
+
+      const currentQuestion = quizData[currentQuestionIndex];
+      if (selectedOption === currentQuestion.answer) {
+        score++;
+      }
+
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    });
+
+    backButton.addEventListener("click", () => {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
+      }
+    });
+
+    function showResult() {
+      questionElement.style.display = "none";
+      optionsElement.style.display = "none";
+      submitButton.style.display = "none";
+      backButton.classList.add("hidden");
+      resultElement.textContent = `You scored ${score} out of ${quizData.length}!`;
+      resultElement.classList.remove("hidden");
+      returnHomeButton.classList.remove("hidden");
+    }
+
+    returnHomeButton.addEventListener("click", () => {
+      showHome();
+      questionElement.style.display = "block";
+      optionsElement.style.display = "block";
+      submitButton.style.display = "block";
+    });
+
+    startQuizButton.addEventListener("click", () => {
+      homeElement.classList.add("hidden");
+      document.getElementById("quiz").classList.remove("hidden");
+      loadQuestion();
+    });
+
+    // Initialize the app by showing the home screen
+    showHome();
+  </script>
+</body>
+</html>
