@@ -108,6 +108,22 @@
         transform: translateY(100%);
       }
     }
+    .answer-page {
+      text-align: left;
+      font-size: 1rem;
+      margin-top: 20px;
+    }
+    .answer-page div {
+      margin-bottom: 10px;
+    }
+    .correct {
+      color: green;
+      font-weight: bold;
+    }
+    .incorrect {
+      color: red;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -124,6 +140,7 @@
       <button id="submit">Submit</button>
     </div>
     <div class="result" id="result"></div>
+    <div class="answer-page" id="answerPage"></div>
     <button id="returnHome" class="hidden">Return to Home</button>
   </div>
 
@@ -159,10 +176,36 @@
         options: ["Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Claude Monet"],
         answer: "Leonardo da Vinci",
       },
+      {
+        question: "What is the chemical symbol for water?",
+        options: ["H2O", "CO2", "NaCl", "O2"],
+        answer: "H2O",
+      },
+      {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Venus", "Mars", "Mercury", "Jupiter"],
+        answer: "Mars",
+      },
+      {
+        question: "What is the powerhouse of the cell?",
+        options: ["Nucleus", "Mitochondria", "Ribosome", "Endoplasmic Reticulum"],
+        answer: "Mitochondria",
+      },
+      {
+        question: "Who wrote the play 'Romeo and Juliet'?",
+        options: ["Charles Dickens", "William Shakespeare", "Mark Twain", "Jane Austen"],
+        answer: "William Shakespeare",
+      },
+      {
+        question: "What is the square root of 64?",
+        options: ["6", "7", "8", "9"],
+        answer: "8",
+      },
     ];
 
     let currentQuestionIndex = 0;
     let score = 0;
+    const userAnswers = [];
 
     const homeElement = document.getElementById("home");
     const questionElement = document.getElementById("question");
@@ -170,6 +213,7 @@
     const backButton = document.getElementById("backButton");
     const submitButton = document.getElementById("submit");
     const resultElement = document.getElementById("result");
+    const answerPageElement = document.getElementById("answerPage");
     const returnHomeButton = document.getElementById("returnHome");
     const startQuizButton = document.getElementById("startQuiz");
 
@@ -177,10 +221,12 @@
       homeElement.classList.remove("hidden");
       document.getElementById("quiz").classList.add("hidden");
       resultElement.classList.add("hidden");
+      answerPageElement.classList.add("hidden");
       returnHomeButton.classList.add("hidden");
       backButton.classList.add("hidden");
       currentQuestionIndex = 0;
       score = 0;
+      userAnswers.length = 0;
     }
 
     function loadQuestion() {
@@ -213,6 +259,7 @@
       }
 
       const currentQuestion = quizData[currentQuestionIndex];
+      userAnswers.push({ question: currentQuestion.question, answer: selectedOption });
       if (selectedOption === currentQuestion.answer) {
         score++;
       }
@@ -240,6 +287,23 @@
       resultElement.textContent = `🎉 You scored ${score} out of ${quizData.length}! 🎉`;
       resultElement.classList.remove("hidden");
       returnHomeButton.classList.remove("hidden");
+      showAnswerPage();
+    }
+
+    function showAnswerPage() {
+      answerPageElement.innerHTML = "<h2>Review Your Answers:</h2>";
+      quizData.forEach((q, index) => {
+        const userAnswer = userAnswers.find((ua) => ua.question === q.question)?.answer || "Not Answered";
+        const isCorrect = userAnswer === q.answer;
+        const answerDiv = document.createElement("div");
+        answerDiv.innerHTML = `
+          <strong>Q${index + 1}: ${q.question}</strong><br>
+          Your Answer: <span class="${isCorrect ? "correct" : "incorrect"}">${userAnswer}</span><br>
+          Correct Answer: <span class="correct">${q.answer}</span>
+        `;
+        answerPageElement.appendChild(answerDiv);
+      });
+      answerPageElement.classList.remove("hidden");
     }
 
     returnHomeButton.addEventListener("click", () => {
