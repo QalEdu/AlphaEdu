@@ -29,6 +29,20 @@
       margin-bottom: 20px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     }
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #ddd;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .progress {
+      height: 100%;
+      background: #ff6f61;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
     .question {
       font-size: 1.5rem;
       margin-bottom: 20px;
@@ -134,6 +148,9 @@
       <button id="startQuiz">Start Quiz</button>
     </div>
     <div id="quiz">
+      <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+      </div>
       <div class="question" id="question"></div>
       <div class="options" id="options"></div>
       <button id="backButton" class="hidden">Back</button>
@@ -216,6 +233,7 @@
     const answerPageElement = document.getElementById("answerPage");
     const returnHomeButton = document.getElementById("returnHome");
     const startQuizButton = document.getElementById("startQuiz");
+    const progressBar = document.getElementById("progress");
 
     function showHome() {
       homeElement.classList.remove("hidden");
@@ -244,6 +262,7 @@
         optionsElement.appendChild(label);
       });
       backButton.classList.toggle("hidden", currentQuestionIndex === 0);
+      updateProgressBar();
     }
 
     function getSelectedOption() {
@@ -304,6 +323,11 @@
         answerPageElement.appendChild(answerDiv);
       });
       answerPageElement.classList.remove("hidden");
+    }
+
+    function updateProgressBar() {
+      const progressPercentage = ((currentQuestionIndex + 1) / quizData.length) * 100;
+      progressBar.style.width = `${progressPercentage}%`;
     }
 
     returnHomeButton.addEventListener("click", () => {
